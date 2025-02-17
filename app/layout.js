@@ -1,5 +1,6 @@
 import { Outfit } from "next/font/google";
 import "./globals.css";
+import ConvexClientProvider from "./ConvexClientProvider";
 
 const outfit= Outfit({subsets:['latin']})
 
@@ -14,7 +15,9 @@ export default function RootLayout({ children }) {
       <body
       className={outfit.className}
        >
+        <ConvexClientProvider>
         {children}
+        </ConvexClientProvider>
       </body>
     </html>
   );
