@@ -1,13 +1,17 @@
 import React from "react";
 import SideBar from "./Components/SideBar";
+import Header from "./Components/Header";
 
 function DashboardLayout({ children }) {
   return (
     <div>
-      <div>
+      <div className=" md:w-64 h-screen fixed">
         <SideBar />
       </div>
-      <div>{children}</div>
+      <div className="md:ml-64">
+        <Header />
+        <div className="p-10">{children}</div>
+      </div>
     </div>
   );
 }
