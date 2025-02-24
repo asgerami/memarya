@@ -12,77 +12,79 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useMutation } from "convex/react";
+import { useAction, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Loader2Icon } from "lucide-react";
 import uuid4 from "uuid4";
 import { useUser } from "@clerk/nextjs";
+import axios from "axios";
 
 function UploadpPdfDialof({ children }) {
   const generateUploadUrl = useMutation(api.fileStorage.generateUploadUrl);
   const addFileEntry = useMutation(api.fileStorage.AddFileEntryToDb);
   const getFileUrl = useMutation(api.fileStorage.getFileUrl);
   const { user } = useUser();
-  const [file, setFile] = useState(null);
+  const embeddDocument = useAction(api.myAction.ingest);
+  const [file, setFile] = useState();
   const [loading, setLoading] = useState(false);
   const [fileName, setFileName] = useState("");
+  const [open, setOpen] = useState(false);
 
   const OnFileSelect = (event) => {
-    if (event.target.files && event.target.files.length > 0) {
-      setFile(event.target.files[0]);
-    } else {
-      console.error("No file selected");
-    }
+    setFile(event.target.files[0]);
   };
 
   const OnUpload = async () => {
-    if (!file) {
-      console.error("No file selected");
-      return;
-    }
-
     setLoading(true);
 
-    try {
-      // Step 1: Get a short-lived upload URL
-      const postUrl = await generateUploadUrl();
-      // Step 2: POST the file to the URL
-      const result = await fetch(postUrl, {
-        method: "POST",
-        headers: { "Content-Type": file.type },
-        body: file,
-      });
+    // Step 1: Get a short-lived upload URL
+    const postUrl = await generateUploadUrl();
+    // Step 2: POST the file to the URL
+    const result = await fetch(postUrl, {
+      method: "POST",
+      headers: { "Content-Type": file.type },
+      body: file,
+    });
 
-      if (!result.ok) {
-        throw new Error("Failed to upload file");
-      }
-
-      const { storageId } = await result.json();
-      console.log("Uploaded file with storageId", storageId);
-
-      // Get the file URL
-      const fileUrl = await getFileUrl({ storageId:storageId });
-
-      const fileId = uuid4();
-      // Step 3: Add an entry to the database
-      const resp = await addFileEntry({
-        fileId: fileId,
-        storageId: storageId,
-        fileName: fileName ?? "Untitled",
-        fileUrl: fileUrl,
-        createdBy: user?.primaryEmailAddress?.emailAddress,
-      });
-      console.log("File entry added to database", resp);
-    } catch (error) {
-      console.error("Error uploading file:", error);
-    } finally {
-      setLoading(false);
+    if (!result.ok) {
+      throw new Error("Failed to upload file");
     }
+
+    const { storageId } = await result.json();
+    console.log("Uploaded file with storageId", storageId);
+
+    // Get the file URL
+    const fileId = uuid4();
+    const fileUrl = await getFileUrl({ storageId: storageId });
+    
+    // Step 3: Add an entry to the database
+    const resp = await addFileEntry({
+      fileId: fileId,
+      storageId: storageId,
+      fileName: fileName ?? "Untitled",
+      fileUrl: fileUrl,
+      createdBy: user?.primaryEmailAddress?.emailAddress,
+    });
+    //console.log("File entry added to database", resp);
+
+    //API call to fetch the PDF process data
+    const API_Response = await axios.get("/api/pdf-loader?pdfUrl=" + fileUrl);
+    console.log("API_Response", API_Response.data.result);
+    await embeddDocument({
+      splitText: API_Response.data.result,
+      fileId: "123",
+    });
+    console.log(embeddresult);
+    setLoading(false);
+    setOpen(false);
   };
 
+
   return (
-    <Dialog>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+    <Dialog open={open}>
+      <DialogTrigger asChild>
+        <Button onClick={()=>setOpen(true)} style={{ backgroundColor: "#05b0fc" }}>+  Upload PDF File</Button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle style={{ color: "#05b0fc" }}>
@@ -115,7 +117,7 @@ function UploadpPdfDialof({ children }) {
               Close
             </Button>
           </DialogClose>
-          <Button style={{ backgroundColor: "#05b0fc" }} onClick={OnUpload}>
+          <Button style={{ backgroundColor: "#05b0fc" }} onClick={OnUpload} disabled={loading}>
             {loading ? (
               <Loader2Icon className="animate-spin" size={20} />
             ) : (
