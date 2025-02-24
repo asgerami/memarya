@@ -74,7 +74,6 @@ function UploadpPdfDialof({ children }) {
       splitText: API_Response.data.result,
       fileId: "123",
     });
-    console.log(embeddresult);
     setLoading(false);
     setOpen(false);
   };
