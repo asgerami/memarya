@@ -1,3 +1,4 @@
+"use node"
 import { ConvexVectorStore } from "@langchain/community/vectorstores/convex";
 import { action } from "./_generated/server.js";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
@@ -17,7 +18,7 @@ export const ingest = action({
       args.splitText,
       args.fileId,
       new GoogleGenerativeAIEmbeddings({
-        apiKey: process.env.GOOGLE_GENAI_API_KEY,
+        apiKey: "AIzaSyBK-EiZYqmzuB7_qWEjJTHouXArTHsLcpw",
         model: "text-embedding-004", // 768 dimensions
         taskType: TaskType.RETRIEVAL_DOCUMENT,
         title: "Document title",

@@ -100,6 +100,7 @@ function UploadpPdfDialof({ children }) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
+          className="w-full"
           onClick={() => setOpen(true)}
           style={{ backgroundColor: "#05b0fc" }}
         >
@@ -132,7 +133,11 @@ function UploadpPdfDialof({ children }) {
         </DialogHeader>
         <DialogFooter className="sm:justify-end">
           <DialogClose asChild>
-            <Button type="button" variant="secondary" onClick={() => setOpen(false)}>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => setOpen(false)}
+            >
               Close
             </Button>
           </DialogClose>
