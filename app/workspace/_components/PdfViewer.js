@@ -7,9 +7,8 @@ function PdfViewer({ fileUrl }) {
       <iframe
         src={fileUrl+"#toolbar=0"}
         width="100%"
-        height="100%"
-        style={{ border: "none" }}
-        className="h-screen"
+        height="90vh"
+        className="h-[90vh]"
       ></iframe>
     </div>
   );
