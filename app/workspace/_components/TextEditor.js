@@ -31,9 +31,9 @@ function TextEditor() {
   });
 
   return (
-    <div>
+    <div className="flex flex-col h-full" >
       {editor && <EditorExtensions editor={editor} />}
-      <div>
+      <div className="flex-1 overflow-auto">
         <EditorContent editor={editor} />
       </div>
     </div>
