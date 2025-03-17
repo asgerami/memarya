@@ -1,4 +1,4 @@
-import { AlignCenter, AlignLeft, AlignRight, Bold, Code, Highlighter, Italic, List, Strikethrough, ToggleLeftIcon, Underline } from "lucide-react";
+import { AlignCenter, AlignLeft, AlignRight, Bold, Code, Highlighter, Italic, List, Redo, Strikethrough, ToggleLeftIcon, Underline, Undo } from "lucide-react";
 import React from "react";
 
 function EditorExtensions({ editor }) {
@@ -43,6 +43,12 @@ function EditorExtensions({ editor }) {
             >
               <Underline />
             </button>
+            <button onClick={() => editor.chain().focus().undo().run()} disabled={!editor.can().undo()}>
+            <Undo />
+          </button>
+          <button onClick={() => editor.chain().focus().redo().run()} disabled={!editor.can().redo()}>
+            <Redo />
+          </button>
             <button
             onClick={() => editor.chain().focus().toggleCode().run()}
             className={editor.isActive('code') ? 'text-blue-500' : ''}
