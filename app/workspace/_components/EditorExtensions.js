@@ -1,7 +1,17 @@
-import { AlignCenter, AlignLeft, AlignRight, Bold, Code, Highlighter, Italic, List, Redo, Strikethrough, ToggleLeftIcon, Underline, Undo } from "lucide-react";
+import { AlignCenter, AlignLeft, AlignRight, Bold, Code, Highlighter, Italic, List, Redo, Sparkles, Strikethrough, ToggleLeftIcon, Underline, Undo } from "lucide-react";
 import React from "react";
 
 function EditorExtensions({ editor }) {
+
+  const onAiClick = () => {
+    const selectedText = editor.state.doc.textBetween(
+      editor.state.selection.from,
+      editor.state.selection.to,
+      "\n"
+    );
+    console.log("Selected Text",selectedText);
+  }
+
   return (
     editor && (
       <div className="p-5">
@@ -90,6 +100,13 @@ function EditorExtensions({ editor }) {
             className={editor.isActive('strike') ? 'text-blue-500' : ''}
           >
             <Strikethrough />
+          </button>
+
+          <button
+            onClick={() => onAiClick()}
+            className={'hover:text-primary-blue-500'}
+          >
+            <Sparkles />
           </button>
           </div>
         </div>
