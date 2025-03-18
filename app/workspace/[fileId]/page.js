@@ -22,7 +22,6 @@ function Workspace() {
 
       <div className="grid grid-cols-2 gap-5">
         <div>
-          {/* TODO: Text Editor */}
           <TextEditor />
         </div>
         <div>

@@ -1,23 +1,25 @@
 "use client";
 import React, { useState } from "react";
+import { notifySuccess } from "@/components/ui/Notification";
+import Notification from "@/components/ui/Notification";
+import { useMutation, useAction } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { useUser } from "@clerk/nextjs";
+import { v4 as uuid4 } from "uuid";
+import axios from "axios";
 import {
   Dialog,
-  DialogClose,
+  DialogTrigger,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useAction, useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
 import { Loader2Icon } from "lucide-react";
-import uuid4 from "uuid4";
-import { useUser } from "@clerk/nextjs";
-import axios from "axios";
 
 function UploadpPdfDialof({ children }) {
   const generateUploadUrl = useMutation(api.fileStorage.generateUploadUrl);
@@ -90,6 +92,9 @@ function UploadpPdfDialof({ children }) {
 
       setLoading(false);
       setOpen(false);
+
+      // Show success notification
+      notifySuccess("File uploaded successfully!");
     } catch (error) {
       console.error("Error uploading file:", error);
       setLoading(false);
@@ -100,7 +105,6 @@ function UploadpPdfDialof({ children }) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
-          className="w-full"
           onClick={() => setOpen(true)}
           style={{ backgroundColor: "#05b0fc" }}
         >
@@ -133,11 +137,7 @@ function UploadpPdfDialof({ children }) {
         </DialogHeader>
         <DialogFooter className="sm:justify-end">
           <DialogClose asChild>
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => setOpen(false)}
-            >
+            <Button type="button" variant="secondary" onClick={() => setOpen(false)}>
               Close
             </Button>
           </DialogClose>
@@ -154,6 +154,7 @@ function UploadpPdfDialof({ children }) {
           </Button>
         </DialogFooter>
       </DialogContent>
+      <Notification />
     </Dialog>
   );
 }
