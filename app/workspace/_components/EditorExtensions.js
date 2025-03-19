@@ -15,8 +15,8 @@ import {
   Underline,
   Undo,
 } from "lucide-react";
+import { useParams } from "next/navigation";
 import React from "react";
-import { useParams } from "react-router-dom";
 
 function EditorExtensions({ editor }) {
   const { fileId } = useParams();
@@ -26,7 +26,7 @@ function EditorExtensions({ editor }) {
     const selectedText = editor.state.doc.textBetween(
       editor.state.selection.from,
       editor.state.selection.to,
-      "\n"
+      " "
     );
     console.log("Selected Text", selectedText);
 
@@ -37,8 +37,8 @@ function EditorExtensions({ editor }) {
     console.log("Unformatted Answer:", result);
   };
 
-  return (
-    editor && (
+  return editor &&
+     (
       <div className="p-5">
         <div className="control-group">
           <div className="button-group flex gap-4">
@@ -161,7 +161,7 @@ function EditorExtensions({ editor }) {
           </div>
         </div>
       </div>
-    )
+    
   );
 }
 

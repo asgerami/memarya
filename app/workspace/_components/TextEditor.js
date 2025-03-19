@@ -19,7 +19,6 @@ function TextEditor() {
         types: ["heading", "paragraph"],
       }),
       Highlight.configure({ multicolor: true }),
-      History,
 
       
     ],
