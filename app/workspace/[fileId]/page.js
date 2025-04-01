@@ -3,7 +3,7 @@ import { useParams } from "next/navigation";
 import React, { useEffect } from "react";
 import WorkspaceHeader from "../_components/WorkspaceHeader";
 import PdfViewer from "../_components/PdfViewer";
-import { useQueries, useQuery } from "convex/react";
+import { useAction, useQueries, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import TextEditor from "../_components/TextEditor";
 
@@ -13,16 +13,18 @@ function Workspace() {
     { fileId: fileId });
 
     useEffect(() => {
-        console.log(fileInfo);
+      if (fileInfo && fileInfo.data){
+        console.log(fileInfo.data);
+      }
     },[fileInfo])
 
   return (
     <div>
-      <WorkspaceHeader />
+      <WorkspaceHeader fileName={fileInfo?.fileName} />
 
       <div className="grid grid-cols-2 gap-5">
         <div>
-          <TextEditor />
+          <TextEditor fileId={fileId} />
         </div>
         <div>
           
